@@ -1,7 +1,6 @@
 
 <?php
 require ('test_header.php');
-include('config/db.php');
 $start = isset($_REQUEST['from']) ? $_REQUEST['from'] : '';
 $end = isset($_REQUEST['to']) ? $_REQUEST['to'] : '';
 ?>
@@ -65,13 +64,22 @@ $end = isset($_REQUEST['to']) ? $_REQUEST['to'] : '';
     <tbody>
         <?php
         if (isset($_POST['from'])) {
-            $start = mysql_real_escape_string($_REQUEST['from']);
-            $end = mysql_real_escape_string($_REQUEST['to']);
+            $dbhost = "localhost";
+            $dbuser = "root";
+            $dbpass = "";
+            $dbname = "railway";
+            $conn = mysqli_connect($dbhost, $dbuser, $dbpass, $dbname);
+            if (!$conn){
+                die ('Could not connect: '.mysqli_error());
+            }
+           
+            $start = mysqli_real_escape_string($conn, $start);
+            $end = mysqli_real_escape_string($conn, $end);
 
-            $farmers = mysql_query("SELECT * FROM route WHERE `from` ='$start' and `to` = '$end'") or die("unable to fetch records" . mysql_error());
+            $farmers = mysqli_query($conn,"SELECT * FROM route WHERE `from` ='$start' and `to` = '$end'") or die("unable to fetch records" . mysqli_error());
             $i = 0;
-            if (mysql_num_rows($farmers)==0) {echo "<script type='text/javascript'>alert('THERE IS NO TRAIN TO THIS ROUTE. TRY ANOTHER ROUTE');window.location.href='search.php'</script>";  }
-            while ($farmer = mysql_fetch_array($farmers)) {
+            if (mysqli_num_rows($farmers)==0) {echo "<script type='text/javascript'>alert('THERE IS NO TRAIN TO THIS ROUTE. TRY ANOTHER ROUTE');window.location.href='search.php'</script>";  }
+            while ($farmer = mysqli_fetch_array($farmers)) {
                
                            
                     $i+=1;
@@ -86,7 +94,7 @@ $end = isset($_REQUEST['to']) ? $_REQUEST['to'] : '';
                 echo "</tr>";
             }
         }
-    
+        mysqli_close($conn);
         ?>
     </tbody>
 </table>

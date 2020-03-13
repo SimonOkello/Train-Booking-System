@@ -1,6 +1,14 @@
 <?php
 session_start();
-include('config/db.php');
+$dbhost = "localhost";
+$dbuser = "root";
+$dbpass = "";
+$dbname = "railway";
+$conn = mysqli_connect($dbhost, $dbuser, $dbpass, $dbname);
+if (!$conn){
+    die ('Could not connect: '.mysqli_error());
+}
+
 function createRandomPassword() {
 	$chars = "abcdefghijkmnopqrstuvwxyz023456789";
 	srand((double)microtime()*1000000);
@@ -23,15 +31,16 @@ $setnum=$_POST['setnum'];
 $date=$_POST['date'];
 $contact=$_POST['contact'];
 $address=$_POST['address'];
-$result = mysql_query("SELECT * FROM route WHERE id='$busnum'");
-while($row = mysql_fetch_array($result))
+$result = mysqli_query($conn, "SELECT * FROM route WHERE id='$busnum'");
+while($row = mysqli_fetch_array($result))
 	{
 	$price=$row['price'];
 	}
 	$payable=$qty*$price;
-mysql_query("INSERT INTO customer (fname, lname, address, contact, bus, transactionum, payable, setnumber)
+mysqli_query($conn, "INSERT INTO customer (fname, lname, address, contact, bus, transactionum, payable, setnumber)
 VALUES ('$fname', '$lname', '$address', '$contact', '$busnum', '$confirmation','$payable','$setnum')");
-mysql_query("INSERT INTO reserve (date, bus, seat_reserve, transactionnum, seat)
+mysqli_query($conn, "INSERT INTO reserve (date, bus, seat_reserve, transactionnum, seat)
 VALUES ('$date', '$busnum', '$qty', '$confirmation','$setnum')");
 header("location: print.php?id=$confirmation&setnum=$setnum");
+mysqli_close($conn);
 ?>

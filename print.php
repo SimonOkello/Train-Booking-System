@@ -1,7 +1,6 @@
 
 <?php
 require ('test_header.php');
-include('config/db.php');
 ?>
 <!DOCTYPE html>
 <html>
@@ -37,15 +36,23 @@ function Clickheretoprint()
 }
 </script>
 
-<a href="javascript:Clickheretoprint()" class="btn btn-primary">PRINT</a>
+<a style  = "float:right;" href="javascript:Clickheretoprint()" class="btn btn-primary">PRINT</a>
 <div id="print_content" style="width: 400px;">
 
 <?php
-include('config/db.php');
+$dbhost = "localhost";
+$dbuser = "root";
+$dbpass = "";
+$dbname = "railway";
+$conn = mysqli_connect($dbhost, $dbuser, $dbpass, $dbname);
+if (!$conn){
+    die ('Could not connect: '.mysqli_error());
+}
+
 $id=$_GET['id'];
 $setnum=$_GET['setnum'];
-$result = mysql_query("SELECT * FROM customer WHERE transactionum='$id'");
-while($row = mysql_fetch_array($result))
+$result = mysqli_query($conn, "SELECT * FROM customer WHERE transactionum='$id'");
+while($row = mysqli_fetch_array($result))
   {
 
     $transactionnum=$row['transactionum'];
@@ -56,22 +63,23 @@ while($row = mysql_fetch_array($result))
     $payable=$row['payable'];
     
   }
-$results = mysql_query("SELECT * FROM reserve WHERE transactionnum='$id'");
-while($rows = mysql_fetch_array($results))
+$results = mysqli_query($conn, "SELECT * FROM reserve WHERE transactionnum='$id'");
+while($rows = mysqli_fetch_array($results))
   {
     $ggagaga=$rows['bus'];
     
-    $resulta = mysql_query("SELECT * FROM route WHERE id='$ggagaga'");
-    while($rowa = mysql_fetch_array($resulta))
+    $resulta = mysqli_query($conn, "SELECT * FROM route WHERE id='$ggagaga'");
+    while($rowa = mysqli_fetch_array($resulta))
       {
 $from=$rowa['from'];
 $to=$rowa['to'];
-$type=$rowa['type'];
+$type=$rowa['name'];
  $time=$rowa['time'];
  $date=$rows['date'];
       }
     
   }
+  mysqli_close($conn);
 ?>
 <div id="printable">
 <table id="receipt"  class="form__field" >

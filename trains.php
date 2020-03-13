@@ -94,11 +94,13 @@ include('config/db.php');
  <header class="form__header">
  <h1 class="form__title" style="text-align:center"><span>Trains Details</span></h1>
  </header>
+ <br><br><br>
+<a style="float:right;" href="add_train.php" class="btn btn-primary">ADD NEW TRAIN</a>
 <table id="hor-minimalist-b">
     <thead >
         <tr>
             <th>#</th>
-            <th> Train Type </th>
+            <th> Train Name </th>
                                 <th> Origin </th>
                                 <th> Destination </th>
                                 <th> Seat Number </th>
@@ -109,19 +111,27 @@ include('config/db.php');
     </thead>
     <tbody>
         <?php
-       
+            $dbhost = "localhost";
+            $dbuser = "root";
+            $dbpass = "";
+            $dbname = "railway";
+            $conn = mysqli_connect($dbhost, $dbuser, $dbpass, $dbname);
+            if (!$conn){
+                die ('Could not connect: '.mysqli_error());
+            }
+	
 
-            $query = mysql_query("SELECT * FROM route") or die("unable to fetch records" . mysqli_error());
+            $query = mysqli_query($conn,"SELECT * FROM route") or die("unable to fetch records" . mysqli_error());
             $i = 0;
             
-            while ($row = mysql_fetch_array($query)) {
+            while ($row = mysqli_fetch_array($query)) {
                
                 
                
                     $i+=1;
                echo '<tr>';
                                     echo '<td>'.$i.'</td>';
-                                    echo '<td>'.$row['type'].'</td>';
+                                    echo '<td>'.$row['name'].'</td>';
                                     echo '<td>'.$row['from'].'</td>';
                                     echo '<td>'.$row['to'].'</td>';
                                     echo '<td>'.$row['numseats'].'</td>';
@@ -130,7 +140,7 @@ include('config/db.php');
                                     echo '<td><div align="center"><a rel="facebox" href="editrutedetails.php?id='.$row['id'].'">edit</a> | <a href="#" id="'.$row['id'].'" class="delbutton" title="Click To Delete">delete</a></div></td>';
                                     echo '</tr>';
             }
-        
+        mysqli_close($conn);
         ?>
     </tbody>
 </table>
@@ -159,7 +169,7 @@ var info = 'id=' + del_id;
    url: "deleteroute.php",
    data: info,
    success: function(){
-   
+   window.location.href='trains.php'
    }
  });
          $(this).parents(".record").animate({ backgroundColor: "#fbc7c7" }, "fast")

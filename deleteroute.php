@@ -1,12 +1,20 @@
 <?php
 
 // This is a sample code in case you wish to check the username from a mysql db table
-include('../db.php');
+$dbhost = "localhost";
+$dbuser = "root";
+$dbpass = "";
+$dbname = "railway";
+$conn = mysqli_connect($dbhost, $dbuser, $dbpass, $dbname);
+if (!$conn){
+    die ('Could not connect: '.mysqli_error());
+}
+
 if($_GET['id'])
 {
 $id=$_GET['id'];
  $sql = "delete from route where id='$id'";
- mysql_query( $sql);
+ mysqli_query( $conn, $sql);
 }
-
+mysqli_close($conn);
 ?>

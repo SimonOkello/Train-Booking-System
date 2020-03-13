@@ -1,5 +1,5 @@
 <?php
-  require ('home_header.php');
+require ('home_header.php');
 ?>
 <!DOCTYPE html>
 <html>
@@ -21,14 +21,23 @@
                                             <label class="form__label">FROM</label>
                                             <select name="route" class="form__field" required />
                         <?php
-                        include('../config/db.php');
-                        $result = mysql_query("SELECT * FROM route");
-                        while($row = mysql_fetch_array($result))
+                        $dbhost = "localhost";
+                        $dbuser = "root";
+                        $dbpass = "";
+                        $dbname = "railway";
+                        $conn = mysqli_connect($dbhost, $dbuser, $dbpass, $dbname);
+                        if (!$conn){
+                            die ('Could not connect: '.mysqli_error());
+                        }
+                        
+                        $result = mysqli_query($conn,"SELECT * FROM route");
+                        while($row = mysqli_fetch_array($result))
                             {
                                 echo '<option value="'.$row['id'].'">';
                                 echo $row['from'];
                                 echo '</option>';
                             }
+
                         ?>
                         </select>
                                         </div>
@@ -36,14 +45,22 @@
                                             <label class="form__label">TO</label>
                                             <select name="route" class="form__field" required />
                         <?php
-                        include('../config/db.php');
-                        $result = mysql_query("SELECT * FROM route");
-                        while($row = mysql_fetch_array($result))
+                        $dbhost = "localhost";
+                        $dbuser = "root";
+                        $dbpass = "";
+                        $dbname = "railway";
+                        $conn = mysqli_connect($dbhost, $dbuser, $dbpass, $dbname);
+                        if (!$conn){
+                            die ('Could not connect: '.mysqli_error());
+                        }
+                        $result = mysqli_query($conn, "SELECT * FROM route");
+                        while($row = mysqli_fetch_array($result))
                             {
                                 echo '<option value="'.$row['id'].'">';
                                 echo $row['to'];
                                 echo '</option>';
                             }
+                            mysqli_close($conn);
                         ?>
                         </select>
                                         </div>
@@ -61,6 +78,7 @@
                                               <option>7</option>
                                               <option>8</option>
                                               <option>9</option>
+                                              <option>10</option>
                                               </select>
                                         </div>
                                     

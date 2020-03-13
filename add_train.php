@@ -81,12 +81,10 @@ require ('admin_header.php');
             <li><a href="dashboard.php">DASHBOARD</a></li>
             <li><a href="trains.php">TRAINS</a></li>
             <li><a href="seatInventory.php">SEAT INVENTORY</a></li>
-            <!--<li><a href="result.php">Search Train</a></li>
-            <li class="current"><a href="contact.php">Contact Us</a></li>-->
         </ul>
 
 <header class="form__header">
-        <h1 class="form__title"><span>Edit</span> Train</h1>
+        <h1 class="form__title"><span>New</span> Train</h1>
     </header>
     <fieldset class="form__body">
         <?php
@@ -99,55 +97,59 @@ require ('admin_header.php');
             die ('Could not connect: '.mysqli_error());
         }
 
-    $id=$_GET['id'];
+    if (isset($_POST['add'])) {
+    $from = mysqli_real_escape_string($conn, $_POST['from']);
+    $to = mysqli_real_escape_string($conn,$_POST['to']);
+    $price = mysqli_real_escape_string($conn,$_POST['price']);
+    $numseats = mysqli_real_escape_string($conn,$_POST['numseats']);
+    $name = mysqli_real_escape_string($conn,$_POST['name']);
+    $time = mysqli_real_escape_string($conn,$_POST['time']);
 
-    $result = mysqli_query($conn,"SELECT * FROM route where id='$id'");
-        while($row = mysqli_fetch_array($result))
-            {
-                $name=$row['name'];
-                $from=$row['from'];
-                $to=$row['to'];
-                $price=$row['price'];
-                $numseats=$row['numseats'];
-                $time=$row['time'];
-            }
-mysqli_close($conn);
+    $sql = "INSERT INTO route (`from`, `to`, `price`, `numseats`, `name`,`time`) VALUES ('$from','$to','$price','$numseats','$name','$time')";
+    $query = mysqli_query($conn, $sql);
+    if($query){
+        echo "<script type='text/javascript'>alert('This Train has been added.'); window.location.href='trains.php'</script>";
+    }else{
+        echo "<script type='text/javascript'>alert('Failed!'); window.location.href='add_train.php'</script>";
+    }
+    mysqli_close($conn);
+    }
+    
 ?>
      
-    <form class=" form-inline" method="post" action="execeditroute.php">
-    	<input type="hidden" name="roomid" value="<?php echo $id=$_GET['id'] ?>">
+    <form class=" form-inline" method="post" action="add_train.php">
     <div class="form__row">
             <div class="form__item">
                 <label class="form__label">Train Name</label>
-                <input type="text" name="name"  class="form__field" value='<?php echo $name ?>'  />
+                <input type="text" name="name"  class="form__field" required  />
             </div>
             <div class="form__item">
                 <label class="form__label">Origin</label>
-                <input type="text" name="from"  class="form__field" value='<?php echo $from; ?>'  />
+                <input type="text" name="from"  class="form__field" required  />
             </div>
         </div>
         <div class="form__row">
             <div class="form__item">
                 <label class="form__label">Destination</label>
-                <input type="text" name="to"  class="form__field" value='<?php echo $to; ?>'  />
+                <input type="text" name="to"  class="form__field" required  />
             </div>
             <div class="form__item">
                 <label class="form__label">Price</label>
-                <input type="text" name="price"  class="form__field" value='<?php echo $price; ?>'  />
+                <input type="text" name="price"  class="form__field" required />
             </div>
         </div>
         <div class="form__row">
             <div class="form__item">
                 <label class="form__label">Number of seats</label>
-                <input type="text" name="numseats"  class="form__field" value='<?php echo $numseats; ?>'/>
+                <input type="text" name="numseats"  class="form__field" required />
             </div>
             <div class="form__item">
                 <label class="form__label">Time</label>
-                <input type="text" name="time"  class="form__field" value='<?php echo $time; ?>' />
+                <input type="text" name="time"  class="form__field" required />
             </div>
         </div>
         <div class="form__row">
-         <input type="submit" name = "edit" class="btn btn-primary" value="Submit">
+         <input type="submit" name="add" class="btn btn-primary" value="ADD">
      </div>
     
 </form>

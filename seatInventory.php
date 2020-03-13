@@ -99,7 +99,7 @@ include('config/db.php');
         <tr>
             <th>#</th>
                                 <th> Date </th>
-                                <th> Bus Type </th>
+                                <th> Train Name </th>
                                 <th> Route </th>
                                 <th> Seat Number </th>
                                 <th> Transaction Code </th>
@@ -108,20 +108,28 @@ include('config/db.php');
     </thead>
     <tbody>
         <?php
-       
-       $result = mysql_query("SELECT * FROM reserve");
+       $dbhost = "localhost";
+        $dbuser = "root";
+        $dbpass = "";
+        $dbname = "railway";
+        $conn = mysqli_connect($dbhost, $dbuser, $dbpass, $dbname);
+        if (!$conn){
+            die ('Could not connect: '.mysqli_error());
+        }
+        
+       $result = mysqli_query($conn, "SELECT * FROM reserve");
        $i=0;
-                            while($row = mysql_fetch_array($result))
+                            while($row = mysqli_fetch_array($result))
                                 {
                                     $i+=1;
                                     echo '<tr>';
                                     echo '<td>'.$i.'</td>';
                                     echo '<td>'.$row['date'].'</td>';
                                     $rrad=$row['bus'];
-                                    $results = mysql_query("SELECT * FROM route WHERE id='$rrad'");
-                                    while($rows = mysql_fetch_array($results))
+                                    $results = mysqli_query($conn,"SELECT * FROM route WHERE id='$rrad'");
+                                    while($rows = mysqli_fetch_array($results))
                                         {
-                                    echo '<td>'.$rows['type'].'</td>';
+                                    echo '<td>'.$rows['name'].'</td>';
                                     echo '<td>'.$rows['from'].'-'.$rows['to'].'</td>';
                                         }
                                     echo '<td>'.$row['seat'].'</td>';
@@ -129,7 +137,7 @@ include('config/db.php');
                                     echo '<td><div align="center"><a href="#" id="'.$row['id'].'" class="delbutton" title="Click To Delete">delete</a></div></td>';
                                     echo '</tr>';
                                 }
-        
+       mysqli_close($conn); 
         ?>
     </tbody>
 </table>
@@ -158,7 +166,7 @@ var info = 'id=' + del_id;
    url: "deleteinventory.php",
    data: info,
    success: function(){
-   
+   window.location.href='seatInventory.php'
    }
  });
          $(this).parents(".record").animate({ backgroundColor: "#fbc7c7" }, "fast")

@@ -1,13 +1,24 @@
 <?php
-	include('config/db.php');
-	$roomid = $_POST['id'];
-	$type=$_POST['type'];
-	$from=$_POST['from'];
-	$to=$_POST['to'];
-	$price=$_POST['price'];
-	$seat=$_POST['seat'];
-	$time=$_POST['time'];
-	mysql_query("UPDATE route SET `type`='$type', `price`='$price', `from`='$from',`to`='$to', `numseats`='$seat', `time`='$time' WHERE id='$roomid'");
-	header("location: trains.php");
 
+	
+	
+	if (isset($_POST['edit'])){
+		$dbhost = "localhost";
+		$dbuser = "root";
+		$dbpass = "";
+		$dbname = "railway";
+		$conn = mysqli_connect($dbhost, $dbuser, $dbpass, $dbname);
+		if (!$conn){
+			die ('Could not connect: '.mysqli_error());
+		}
+	$roomid = $_POST['id'];
+	$name=mysqli_real_escape_string($conn, $_POST['name']);
+	$from=mysqli_real_escape_string($conn,$_POST['from']);
+	$to=mysqli_real_escape_string($conn,$_POST['to']);
+	$price=mysqli_real_escape_string($conn,$_POST['price']);
+	$numseats=mysqli_real_escape_string($conn,$_POST['numseats']);
+	$time=mysqli_real_escape_string($conn,$_POST['time']);
+	mysqli_query($conn, "UPDATE route SET `name`='$name', `price`='$price', `from`='$from',`to`='$to', `numseats`='$numseats', `time`='$time' WHERE id='$roomid'");
+	header("location: trains.php");
+	}
 ?>

@@ -12,7 +12,7 @@
     <!-- END: FOOTER LOGO -->
 
     <div class="footerContacts footerTop__item">
-      <div class="footerContacts__phone">+254714369476</div>
+      <div class="footerContacts__phone">+254712345678</div>
       <div class="footerContacts__email">support@book.com</div>
     </div>
     <!-- END: FOOTER CONTACTS -->
@@ -29,7 +29,7 @@
 
 <footer class="footerBottom">
   <div class="container cf">
-    <div class="copyright">&copy; 2018 KARIS. All rights reserved</div>
+    <div class="copyright">&copy; 2020 Edwin. All rights reserved</div>
     <!-- END: COPYRIGHT -->
 
     <ul class="footerSocial">

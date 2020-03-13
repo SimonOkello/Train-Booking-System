@@ -1,13 +1,22 @@
+
 <?php
 session_start();
-include('config/db.php');
+$dbhost = "localhost";
+$dbuser = "root";
+$dbpass = "";
+$dbname = "railway";
+$conn = mysqli_connect($dbhost, $dbuser, $dbpass, $dbname);
+if (!$conn){
+    die ('Could not connect: '.mysqli_error());
+}
+
 if (isset($_POST['login'])) {
 $username=$_POST['username'];
 $password=$_POST['password'];
     
-    $query = "SELECT * FROM user WHERE username='$username' AND password='$password'";
-            $result = mysql_query($query)or die(mysql_error());
-            $row = mysql_fetch_array($result);
+    $query = "SELECT * FROM user WHERE username='$username' AND password='".md5($password)."'";
+            $result = mysqli_query($conn, $query);
+            $row = mysqli_fetch_array($result);
             if (!empty($row)) {            
             
             $_SESSION['username']=$username;
@@ -19,5 +28,5 @@ $password=$_POST['password'];
       echo "<script type='text/javascript'>alert('Username/Password incorrect');window.location.href='index.php'</script>";
     }
 }
-
+mysqli_close($conn);
 ?>

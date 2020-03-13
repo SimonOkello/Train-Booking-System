@@ -1,24 +1,34 @@
 <?php require('reg_header.php');
-include('config/db.php');
  ?>
 
 
 <?php
+$dbhost = "localhost";
+$dbuser = "root";
+$dbpass = "";
+$dbname = "railway";
+$conn = mysqli_connect($dbhost, $dbuser, $dbpass, $dbname);
+if (!$conn){
+    die ('Could not connect: '.mysqli_error());
+}
+
 if (isset($_POST['register'])) {
-$username = $_POST['username'];
-$password = $_POST['password'];
-$firstname = $_POST['firstname'];
-$lastname = $_POST['lastname'];
-$email = $_POST['email'];
-$dob = $_POST['dob'];
-$sql = "INSERT INTO user (firstname, lastname, username, password, email,dob) VALUES ('$firstname','$lastname','$username','$password','$email','$dob')";
-$query = mysql_query($sql)or die(mysql_error());
+$username = mysqli_real_escape_string($conn, $_POST['username']);
+$password =mysqli_real_escape_string($conn, $_POST['password']);
+$firstname = mysqli_real_escape_string($conn,$_POST['firstname']);
+$lastname = mysqli_real_escape_string($conn,$_POST['lastname']);
+$email = mysqli_real_escape_string($conn,$_POST['email']);
+$dob = mysqli_real_escape_string($conn,$_POST['dob']);
+
+$sql = "INSERT INTO user (firstname, lastname, username, password, email, dob) VALUES ('$firstname','$lastname','$username', md5('$password'),'$email','$dob')";
+$query = mysqli_query($conn, $sql);
 if($query){
     echo "<script type='text/javascript'>alert('Registration Done'); window.location.href='index.php'</script>";
 }else{
     echo "<script type='text/javascript'>alert('Failed!'); window.location.href='register.php'</script>";
 }
 }
+mysqli_close($conn);
 ?>
 
 <form class="form" method="post" action="register.php" style="margin-top:50px">

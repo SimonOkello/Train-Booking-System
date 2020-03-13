@@ -9,7 +9,7 @@ $(document).ready(function (){
         {
         dateFormat: 'dd/mm/yy',
         minDate: -500,
-        maxDate: 500
+        maxDate: 0
 
     });
 

@@ -11,10 +11,17 @@ include('config/db.php');
     </header>
     <fieldset class="form__body">
         <?php
-include('config/db.php');
+        $dbhost = "localhost";
+        $dbuser = "root";
+        $dbpass = "";
+        $dbname = "railway";
+        $conn = mysqli_connect($dbhost, $dbuser, $dbpass, $dbname);
+        if (!$conn){
+          die ('Could not connect: '.mysqli_error());
+        }
 $id=$_GET['id'];
-$result = mysql_query("SELECT * FROM route WHERE id='$id'");
-while($row = mysql_fetch_array($result))
+$result = mysqli_query($conn,"SELECT * FROM route WHERE id='$id'");
+while($row = mysqli_fetch_array($result))
   {
   $seatnum=$row['numseats'];
   }

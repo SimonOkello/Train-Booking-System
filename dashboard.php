@@ -1,7 +1,6 @@
 
 <?php
 require ('admin_header.php');
-include('config/db.php');
 ?>
 <!DOCTYPE html>
 <html>
@@ -103,7 +102,7 @@ include('config/db.php');
             <th> Address </th>
              <th> Contact </th>
             <th> Route </th>
-            <th> Train Type </th>
+            <th> Train Name </th>
             <th> Time </th>
             <th> Seat Number </th>
             <th> Payable </th>
@@ -113,12 +112,20 @@ include('config/db.php');
     </thead>
     <tbody>
         <?php
+       $dbhost = "localhost";
+        $dbuser = "root";
+        $dbpass = "";
+        $dbname = "railway";
+        $conn = mysqli_connect($dbhost, $dbuser, $dbpass, $dbname);
+        if (!$conn){
+            die ('Could not connect: '.mysqli_error());
+        }
        
 
-            $query = mysql_query("SELECT * FROM customer") or die("unable to fetch records" . mysqli_error());
+            $query = mysqli_query($conn, "SELECT * FROM customer") or die("unable to fetch records" . mysqli_error());
             $i = 0;
             
-            while ($row = mysql_fetch_array($query)) {
+            while ($row = mysqli_fetch_array($query)) {
                
                 
                
@@ -131,15 +138,15 @@ include('config/db.php');
                                     echo '<td>'.$row['contact'].'</td>';
                                     $rrad=$row['bus'];
                                     $dddd=$row['transactionum'];
-                                    $results = mysql_query("SELECT * FROM route WHERE id='$rrad'");
-                                    while($rows = mysql_fetch_array($results))
+                                    $results = mysqli_query($conn, "SELECT * FROM route WHERE id='$rrad'");
+                                    while($rows = mysqli_fetch_array($results))
                                         {
                                     echo '<td>'.$rows['from'].'-'.$rows['to'].'</td>';
-                                    echo '<td>'.$rows['type'].'</td>';
+                                    echo '<td>'.$rows['name'].'</td>';
                                     echo '<td>'.$rows['time'].'</td>';
                                         }
-                                    $resulta = mysql_query("SELECT * FROM reserve WHERE transactionnum='$dddd'");
-                                    while($rowa = mysql_fetch_array($resulta))
+                                    $resulta = mysqli_query($conn,"SELECT * FROM reserve WHERE transactionnum='$dddd'");
+                                    while($rowa = mysqli_fetch_array($resulta))
                                         {
                                     echo '<td>'.$rowa['seat'].'</td>';
                                         }
@@ -149,7 +156,7 @@ include('config/db.php');
                                     echo '<td><div align="center"><a rel="facebox" href="editstatus.php?id='.$row['id'].'">edit</a> | <a href="#" id="'.$row['transactionum'].'" class="delbutton" title="Click To Delete">delete</a></div></td>';
                                     echo '</tr>';
             }
-        
+         mysqli_close($conn);
         ?>
     </tbody>
 </table>
@@ -170,7 +177,7 @@ var del_id = element.attr("id");
 
 //Built a url to send
 var info = 'id=' + del_id;
- if(confirm("Are you sure you want to delete this item?"))
+ if(confirm("Are you sure you want to delete this booking?"))
           {
 
  $.ajax({
@@ -178,7 +185,7 @@ var info = 'id=' + del_id;
    url: "deleteres.php",
    data: info,
    success: function(){
-   
+   window.location.href='dashboard.php'
    }
  });
          $(this).parents(".record").animate({ backgroundColor: "#fbc7c7" }, "fast")
@@ -191,6 +198,7 @@ return false;
 });
 
 });
+
 </script>
 <?php include('footer.php')?>
 </body>
